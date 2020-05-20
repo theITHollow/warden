@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: validation
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: warden
+  labels:
+    app: warden
+  namespace: validation
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - name: warden
+      image: theithollow/warden:v1
+      imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: warden
+  namespace: validation
+spec:
+  selector:
+    app: warden
+  ports:
+  - port: 443
+    targetPort: 5000
