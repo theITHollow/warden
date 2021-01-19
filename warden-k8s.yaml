@@ -15,7 +15,7 @@ spec:
   restartPolicy: OnFailure
   containers:
     - name: warden
-      image: theithollow/warden:v1
+      image: eshanks16/warden:v1 #EXAMPLE-USE YOUR IMAGE REPO/IMAGE
       imagePullPolicy: Always
 ---
 apiVersion: v1

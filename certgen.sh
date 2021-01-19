@@ -2,12 +2,19 @@ keydir="certs"
 cd "$keydir"
 
 # CA cert and private key
-openssl req -nodes -new -x509 -keyout ca.key -out ca.crt -subj "/CN=Warden Controller Webook"
+openssl req -nodes -new -x509 -keyout ca.key -sha256 -days 365 -out ca.crt -subj "/CN=Warden Controller Webhook"
+
 # private key for the webhook server
-openssl genrsa -out warden.key 2048
-# Generate and sign the key
-openssl req -new -key warden.key -subj "/CN=warden.validation.svc." \
-    | openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -out warden.crt 
-# Create .pem versions
+  
+openssl req -out warden.csr -newkey rsa:2048 -nodes -keyout warden.key -config ../ext.cnf
+
+#verify the csr
+openssl req -in warden.csr -noout -text
+
+#Create certificate using CSR and Root CA
+
+openssl x509 -req -days 365 -in warden.csr -signkey ca.key -out warden.crt -extfile ../ext.cnf -extensions req_ext
+ 
+#cp warden.crt wardencrt.pem \
 cp warden.crt wardencrt.pem \
-    | cp warden.key wardenkey.pem
+    | openssl rsa -in warden.key -text > wardenkey.pem
