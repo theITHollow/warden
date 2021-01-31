@@ -1,3 +1,3 @@
-Flask==0.12.4
+Flask==1.0
 jsonify
 Werkzeug==0.16.1
